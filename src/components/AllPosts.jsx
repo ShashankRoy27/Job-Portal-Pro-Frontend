@@ -28,12 +28,12 @@ const Search = ({ theme }) => {
   useEffect(() => {
 
     const fetchPosts = async () => {
-      const response = await axios.get(`http://localhost:8080/jobPosts/keyword/${query}`);
+      const response = await axios.get(`https://job-portal-pro-backend.onrender.com/jobPosts/keyword/${query}`);
       setPost(response.data);
     };
 
     const fetchInitialPosts = async () => {
-      const response = await axios.get(`http://localhost:8080/jobPosts`);
+      const response = await axios.get(`https://job-portal-pro-backend.onrender.com/jobPosts`);
       setPost(response.data);
     };
 
@@ -47,7 +47,7 @@ const Search = ({ theme }) => {
 
   const handleDelete = (id) => {
     async function deletePost() {
-      await axios.delete(`http://localhost:8080/jobPost/${id}`);
+      await axios.delete(`https://job-portal-pro-backend.onrender.com/jobPost/${id}`);
     }
     deletePost();
     window.location.reload();
