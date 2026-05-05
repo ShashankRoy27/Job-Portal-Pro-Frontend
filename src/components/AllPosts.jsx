@@ -10,7 +10,6 @@ import {
   InputAdornment,
   TextField,
   Typography,
-  CircularProgress
 } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -19,9 +18,7 @@ import { useNavigate } from 'react-router-dom';
 const Search = ({ theme }) => {
 
   const [query, setQuery] = useState("");
-  const [post, setPost] = useState([]);
-  const [loading, setLoading] = useState(true);
-
+  const [post, setPost] = useState(null);
   const navigate = useNavigate();
 
   const handleEdit = (id) => {
@@ -31,27 +28,13 @@ const Search = ({ theme }) => {
   useEffect(() => {
 
     const fetchPosts = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get(`https://job-portal-pro-backend.onrender.com/jobPosts/keyword/${query}`);
-        setPost(response.data);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
+      const response = await axios.get(`https://job-portal-pro-backend.onrender.com/jobPosts/keyword/${query}`);
+      setPost(response.data);
     };
 
     const fetchInitialPosts = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get(`https://job-portal-pro-backend.onrender.com/jobPosts`);
-        setPost(response.data);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
+      const response = await axios.get(`https://job-portal-pro-backend.onrender.com/jobPosts`);
+      setPost(response.data);
     };
 
     if (query.length === 0) {
@@ -62,13 +45,12 @@ const Search = ({ theme }) => {
 
   }, [query]);
 
-  const handleDelete = async (id) => {
-    try {
+  const handleDelete = (id) => {
+    async function deletePost() {
       await axios.delete(`https://job-portal-pro-backend.onrender.com/jobPost/${id}`);
-      setPost(prev => prev.filter(p => p.postId !== id)); // no reload 🔥
-    } catch (err) {
-      console.error(err);
     }
+    deletePost();
+    window.location.reload();
   }
 
   return (
@@ -94,80 +76,64 @@ const Search = ({ theme }) => {
           </Box>
         </Grid>
 
-        {/* 🔥 LOADING STATE */}
-        {loading && (
-          <Grid item xs={12}>
-            <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
-              <CircularProgress />
-            </Box>
-          </Grid>
-        )}
-
         {/* JOB CARDS */}
-        {!loading && post.length === 0 && (
-          <Grid item xs={12}>
-            <Typography align="center" sx={{ mt: 4 }}>
-              No jobs found
-            </Typography>
-          </Grid>
-        )}
+        {post &&
+          post.map((p) => {
+            return (
+              <Grid key={p.postId} item xs={12} md={6} lg={4}>
 
-        {!loading && post.map((p) => {
-          return (
-            <Grid key={p.postId} item xs={12} md={6} lg={4}>
-
-              <Card
-                sx={{
-                  p: 2,
-                  backgroundColor: theme === "light" ? "#ADD8E6" : "#2c2c2c",
-                  color: theme === "light" ? "black" : "white"
-                }}
-              >
-
-                {/* TITLE */}
-                <Typography
-                  variant="h5"
+                <Card
                   sx={{
-                    fontSize: "1.8rem",
-                    fontWeight: "600",
-                    fontFamily: "sans-serif"
+                    p: 2,
+                    backgroundColor: theme === "light" ? "#ADD8E6" : "#2c2c2c",
+                    color: theme === "light" ? "black" : "white"
                   }}
                 >
-                  {p.postProfile}
-                </Typography>
 
-                {/* DESCRIPTION */}
-                <Typography
-                  sx={{
-                    color: theme === "light" ? "#585858" : "#ccc",
-                    mt: 1,
-                    fontFamily: "cursive"
-                  }}
-                >
-                  Description: {p.postDesc}
-                </Typography>
+                  {/* TITLE */}
+                  <Typography
+                    variant="h5"
+                    sx={{
+                      fontSize: "1.8rem",
+                      fontWeight: "600",
+                      fontFamily: "sans-serif"
+                    }}
+                  >
+                    {p.postProfile}
+                  </Typography>
 
-                {/* EXPERIENCE */}
-                <Typography sx={{ mt: 1.5 }}>
-                  Experience: {p.reqExperience} years
-                </Typography>
+                  {/* DESCRIPTION */}
+                  <Typography
+                    sx={{
+                      color: theme === "light" ? "#585858" : "#ccc",
+                      mt: 1,
+                      fontFamily: "cursive"
+                    }}
+                  >
+                    Description: {p.postDesc}
+                  </Typography>
 
-                {/* SKILLS */}
-                <Typography sx={{ mt: 1 }}>
-                  Skills: {p.postTechStack?.join(" . ")}
-                </Typography>
+                  {/* EXPERIENCE */}
+                  <Typography sx={{ mt: 1.5 }}>
+                    Experience: {p.reqExperience} years
+                  </Typography>
 
-                {/* ICONS */}
-                <Box sx={{ mt: 1 }}>
-                  <DeleteIcon sx={{ mr: 1, cursor: "pointer" }} onClick={() => handleDelete(p.postId)} />
-                  <EditIcon sx={{ cursor: "pointer" }} onClick={() => handleEdit(p.postId)} />
-                </Box>
+                  {/* SKILLS INLINE (FIXED) */}
+                  <Typography sx={{ mt: 1 }}>
+                    Skills: {p.postTechStack.join(" . ")}
+                  </Typography>
 
-              </Card>
+                  {/* ICONS */}
+                  <Box sx={{ mt: 1 }}>
+                    <DeleteIcon sx={{ mr: 1, cursor: "pointer" }} onClick={() => handleDelete(p.postId)} />
+                    <EditIcon sx={{ cursor: "pointer" }} onClick={() => handleEdit(p.postId)} />
+                  </Box>
 
-            </Grid>
-          );
-        })}
+                </Card>
+
+              </Grid>
+            );
+          })}
       </Grid>
     </>
   )
