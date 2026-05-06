@@ -20,30 +20,60 @@ const Edit = () => {
 
   useEffect(() => {
     const fetchInitialPosts = async (id) => {  
-      const response = await axios.get(`http://localhost:8080/jobPost/${id}`);
+      const response = await axios.get(`https://job-portal-pro-backend.onrender.com/jobPost/${id}`);
       console.log(response.data);
       setForm(response.data);
     };
     fetchInitialPosts(currId);
   }, [currId]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    axios      
-      .put("http://localhost:8080/jobPost",form)
-      .then((resp) => {
-        console.log(resp.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-      navigate('/')
-    };
+  const handleSubmit = async (e) => {
+
+  e.preventDefault();
+
+  try {
+
+    const response = await axios.put(
+      "https://job-portal-pro-backend.onrender.com/jobPost",
+      form
+    );
+
+    console.log(response.data);
+
+    navigate('/');
+
+  } catch (error) {
+
+    console.log(error);
+
+  }
+
+};
 
 
   const handleChange = (e) => {
-    setForm({ ...form, postTechStack: [...form.postTechStack, e.target.value] });
-  };
+
+  const { value, checked } = e.target;
+
+  if (checked) {
+
+    setForm({
+      ...form,
+      postTechStack: [...form.postTechStack, value]
+    });
+
+  } else {
+
+    setForm({
+      ...form,
+      postTechStack: form.postTechStack.filter(
+        (skill) => skill !== value
+      )
+    });
+
+  }
+
+};
 
   const skillSet = [
     {
@@ -66,7 +96,7 @@ const Edit = () => {
   return (
     <Paper sx={{ padding: "1%" }} elevation={0}>
       <Typography sx={{ margin: "3% auto" }} align="center" variant="h5">
-        Edit New Post
+        Edit Post
       </Typography>
       <form autoComplete="off" noValidate onSubmit={handleSubmit}>
         <Box
@@ -76,15 +106,7 @@ const Edit = () => {
             flexDirection: "column",
           }}
         >
-          <TextField
-            min="0"
-            type="number"
-            sx={{ width: "50%", margin: "2% auto" }}
-            onChange={(e) => setForm({ ...form, postId: e.target.value })}
-            label="Enter your Post ID"
-            variant="outlined"
-            value={form.postId}
-          />
+          
           <TextField
             type="string"
             sx={{ width: "50%", margin: "2% auto" }}
@@ -126,12 +148,13 @@ const Edit = () => {
                     <div>
                       <div>
                         <input
-                          type="checkbox"
-                          id={`custom-checkbox-${index}`}
-                          name={name}
-                          value={name}
-                          onChange={handleChange}
-                        />
+  type="checkbox"
+  id={`custom-checkbox-${index}`}
+  name={name}
+  value={name}
+  checked={form.postTechStack.includes(name)}
+  onChange={handleChange}
+/>
                         <label htmlFor={`custom-checkbox-${index}`}>
                           {name}
                         </label>
