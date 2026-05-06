@@ -8,7 +8,7 @@ import {
   Box,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-const initial = { postId:"",postProfile: "", reqExperience: 0, postTechStack: [], postDesc:"" };
+const initial = {postProfile: "", reqExperience: 0, postTechStack: [], postDesc:"" };
 
 
 const Create = () => {
@@ -33,21 +33,31 @@ const Create = () => {
   const navigate = useNavigate();
   const [form, setForm] = useState(initial);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    axios
-      .post("http://localhost:8080/jobPost",form)
-      .then((resp) => {
-        console.log(resp.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-      navigate('/');
-    };
+  const handleSubmit = async (e) => {
+
+  e.preventDefault();
+
+  try {
+
+    const response = await axios.post(
+      "https://job-portal-pro-backend.onrender.com/jobPost",
+      form
+    );
+
+    console.log(response.data);
+
+    navigate('/');
+
+  } catch (error) {
+
+    console.log(error);
+
+  }
+
+};
 
 
-  const { postId, postProfile, reqExperience, postDesc } = form;
+  const { postProfile, reqExperience, postDesc } = form;
 
   const handleChange = (e) => {
     setForm({...form , postTechStack : [...form.postTechStack, e.target.value]});
@@ -68,16 +78,7 @@ const Create = () => {
             flexDirection: "column",
           }}
         >
-           <TextField
-            min="0"
-            type="number"
-            sx={{ width: "50%", margin: "2% auto" }}
-            
-            onChange={(e) => setForm({ ...form, postId: e.target.value })}
-            label="Enter your Post ID"
-            variant="outlined"
-            value={postId}
-          />
+           
           <TextField
             type="string"
             sx={{ width: "50%", margin: "2% auto" }}
