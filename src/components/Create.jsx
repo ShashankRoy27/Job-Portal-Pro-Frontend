@@ -8,7 +8,7 @@ import {
   Box,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-const initial = {postProfile: "", reqExperience: 0, postTechStack: [], postDesc:"",active: true};
+const initial = {postProfile: "", reqExperience: "", postTechStack: [], postDesc:"",active: true};
 
 
 const Create = () => {
@@ -43,7 +43,7 @@ const Create = () => {
 if (
   !form.postProfile?.trim() ||
   !form.postDesc?.trim() ||
-  Number(form.reqExperience) <= 0
+  form.reqExperience === ""
 ) {
 
   setError("Please fill all fields properly.");
