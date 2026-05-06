@@ -15,7 +15,7 @@ const Edit = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [form, setForm] = useState(initial);
-  const [currId] = useState(location.state.id);
+  const currId = location.state?.id;
 
 
   useEffect(() => {
@@ -148,13 +148,13 @@ const Edit = () => {
                     <div>
                       <div>
                         <input
-  type="checkbox"
-  id={`custom-checkbox-${index}`}
-  name={name}
-  value={name}
-  checked={form.postTechStack.includes(name)}
-  onChange={handleChange}
-/>
+                        type="checkbox"
+                        id={`custom-checkbox-${index}`}
+                        name={name}
+                        value={name}
+                        checked={form.postTechStack.includes(name)}
+                        onChange={handleChange}
+                      />
                         <label htmlFor={`custom-checkbox-${index}`}>
                           {name}
                         </label>
@@ -171,7 +171,7 @@ const Edit = () => {
             type="submit"
           
           >
-            Submit
+            Update Post
           </Button>
         </Box>
       </form>
