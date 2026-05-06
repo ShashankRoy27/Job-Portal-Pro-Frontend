@@ -41,9 +41,9 @@ const Create = () => {
   setError("");
 
 if (
-  form.postProfile.trim() === "" ||
-  form.postDesc.trim() === "" ||
-  form.reqExperience <= 0
+  !form.postProfile?.trim() ||
+  !form.postDesc?.trim() ||
+  Number(form.reqExperience) <= 0
 ) {
 
   setError("Please fill all fields properly.");
