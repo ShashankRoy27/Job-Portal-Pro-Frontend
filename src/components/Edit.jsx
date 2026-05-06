@@ -16,6 +16,7 @@ const Edit = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [form, setForm] = useState(initial);
+  const [error, setError] = useState("");
   const currId = location.state?.id;
 
 
@@ -31,7 +32,25 @@ const Edit = () => {
   const handleSubmit = async (e) => {
 
   e.preventDefault();
+  setError("");
 
+if (
+  form.postProfile.trim() === "" ||
+  form.postDesc.trim() === "" ||
+  form.reqExperience <= 0
+) {
+
+  setError("Please fill all fields properly.");
+  return;
+
+}
+
+if (form.postTechStack.length === 0) {
+
+  setError("Please select at least one skill.");
+  return;
+
+}
   try {
 
     const response = await axios.put(
@@ -100,6 +119,15 @@ const Edit = () => {
         Edit Post
       </Typography>
       <form autoComplete="off" noValidate onSubmit={handleSubmit}>
+        {error && (
+  <Typography
+    color="error"
+    align="center"
+    sx={{ mt: 2 }}
+  >
+    {error}
+  </Typography>
+)}
         <Box
           sx={{
             display: "flex",

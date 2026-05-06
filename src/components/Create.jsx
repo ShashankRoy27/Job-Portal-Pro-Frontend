@@ -33,9 +33,30 @@ const Create = () => {
   const navigate = useNavigate();
   const [form, setForm] = useState(initial);
 
+  const [error, setError] = useState("");
+
   const handleSubmit = async (e) => {
 
   e.preventDefault();
+  setError("");
+
+if (
+  form.postProfile.trim() === "" ||
+  form.postDesc.trim() === "" ||
+  form.reqExperience <= 0
+) {
+
+  setError("Please fill all fields properly.");
+  return;
+
+}
+
+if (form.postTechStack.length === 0) {
+
+  setError("Please select at least one skill.");
+  return;
+
+}
 
   try {
 
@@ -60,8 +81,28 @@ const Create = () => {
   const { postProfile, reqExperience, postDesc } = form;
 
   const handleChange = (e) => {
-    setForm({...form , postTechStack : [...form.postTechStack, e.target.value]});
+
+  const { value, checked } = e.target;
+
+  if (checked) {
+
+    setForm({
+      ...form,
+      postTechStack: [...form.postTechStack, value]
+    });
+
+  } else {
+
+    setForm({
+      ...form,
+      postTechStack: form.postTechStack.filter(
+        (skill) => skill !== value
+      )
+    });
+
   }
+
+}
 
   
 
@@ -71,6 +112,15 @@ const Create = () => {
         Create New Post
       </Typography>
       <form autoComplete="off" noValidate onSubmit={handleSubmit}>
+        {error && (
+  <Typography
+    color="error"
+    align="center"
+    sx={{ mt: 2 }}
+  >
+    {error}
+  </Typography>
+)}
         <Box
           sx={{
             display: "flex",
@@ -118,11 +168,12 @@ const Create = () => {
               <div >
                 <div>
                   <input
-                    type="checkbox"
-                    id={`custom-checkbox-${index}`}
-                    name={name}
-                    value={name}
-                    onChange={handleChange}  
+                  type="checkbox"
+                  id={`custom-checkbox-${index}`}
+                  name={name}
+                  value={name}
+                  checked={form.postTechStack.includes(name)}
+                  onChange={handleChange}
                   />
                   <label htmlFor={`custom-checkbox-${index}`}>{name}</label>
                 </div>
