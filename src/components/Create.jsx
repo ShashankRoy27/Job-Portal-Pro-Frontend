@@ -8,7 +8,7 @@ import {
   Box,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-const initial = {postProfile: "", reqExperience: 0, postTechStack: [], postDesc:"" };
+const initial = {postProfile: "", reqExperience: 0, postTechStack: [], postDesc:"",active: true};
 
 
 const Create = () => {

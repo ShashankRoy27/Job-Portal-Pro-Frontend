@@ -9,6 +9,7 @@ const initial = {
   reqExperience: 0,
   postTechStack: [],
   postDesc: "",
+  active: true
 };
 
 const Edit = () => {
