@@ -73,7 +73,15 @@ const Search = ({ theme }) => {
 
   return (
     <>
-      <Grid container spacing={2} sx={{ px: 2, mt: 2 }}>
+      <Grid 
+  container 
+  spacing={2} 
+  sx={{ 
+    px: 2, 
+    mt: 2,
+    pb: 4
+  }}
+>
 
         {/* SEARCH BAR */}
         <Grid item xs={12}>
